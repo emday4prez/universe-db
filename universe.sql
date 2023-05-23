@@ -88,7 +88,8 @@ CREATE TABLE public.moon (
     name character varying(32) NOT NULL,
     distance_from_earth integer,
     age_in_millions_of_years integer,
-    description text NOT NULL
+    description text NOT NULL,
+    planet_id integer
 );
 
 
@@ -239,6 +240,7 @@ INSERT INTO public.galaxy VALUES (7, 'Milky Way', 0, 13000);
 -- Data for Name: moon; Type: TABLE DATA; Schema: public; Owner: freecodecamp
 --
 
+INSERT INTO public.moon VALUES (1, 'Moon', 0, 4800, 'Earths only moon', 3);
 
 
 --
@@ -249,6 +251,9 @@ INSERT INTO public.planet VALUES (3, 'Earth', 1, 2500, true, true, 0, 'you are o
 INSERT INTO public.planet VALUES (1, 'Mercury', 1, 4500, false, true, 92, 'closest to sun');
 INSERT INTO public.planet VALUES (2, 'Venus', 1, 4000, false, true, 41, 'second closest to sun');
 INSERT INTO public.planet VALUES (4, 'Proxima Centauri b', 2, 1000, false, true, 4, 'orbits the closest star to the sun');
+INSERT INTO public.planet VALUES (5, 'Jupiter', 1, 2500, false, false, 630, 'largest in our solar system');
+INSERT INTO public.planet VALUES (6, 'Saturn', 1, 455, false, false, 1284, 'has rings');
+INSERT INTO public.planet VALUES (7, 'Uranus', 1, 2000, false, true, 2716, 'the name sounds like your anus');
 
 
 --
@@ -274,14 +279,14 @@ SELECT pg_catalog.setval('public.galaxy_id_seq', 7, true);
 -- Name: moon_moon_id_seq; Type: SEQUENCE SET; Schema: public; Owner: freecodecamp
 --
 
-SELECT pg_catalog.setval('public.moon_moon_id_seq', 1, false);
+SELECT pg_catalog.setval('public.moon_moon_id_seq', 1, true);
 
 
 --
 -- Name: planet_planet_id_seq; Type: SEQUENCE SET; Schema: public; Owner: freecodecamp
 --
 
-SELECT pg_catalog.setval('public.planet_planet_id_seq', 4, true);
+SELECT pg_catalog.setval('public.planet_planet_id_seq', 7, true);
 
 
 --
@@ -337,6 +342,14 @@ ALTER TABLE ONLY public.planet
 
 ALTER TABLE ONLY public.star
     ADD CONSTRAINT star_pkey PRIMARY KEY (star_id);
+
+
+--
+-- Name: moon fk_moon_planet; Type: FK CONSTRAINT; Schema: public; Owner: freecodecamp
+--
+
+ALTER TABLE ONLY public.moon
+    ADD CONSTRAINT fk_moon_planet FOREIGN KEY (planet_id) REFERENCES public.planet(planet_id);
 
 
 --
