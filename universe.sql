@@ -118,6 +118,43 @@ ALTER SEQUENCE public.moon_moon_id_seq OWNED BY public.moon.moon_id;
 
 
 --
+-- Name: nebula; Type: TABLE; Schema: public; Owner: freecodecamp
+--
+
+CREATE TABLE public.nebula (
+    nebula_id integer NOT NULL,
+    name character varying(255) NOT NULL,
+    type character varying(100),
+    size numeric,
+    description text
+);
+
+
+ALTER TABLE public.nebula OWNER TO freecodecamp;
+
+--
+-- Name: nebula_nebula_id_seq; Type: SEQUENCE; Schema: public; Owner: freecodecamp
+--
+
+CREATE SEQUENCE public.nebula_nebula_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.nebula_nebula_id_seq OWNER TO freecodecamp;
+
+--
+-- Name: nebula_nebula_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: freecodecamp
+--
+
+ALTER SEQUENCE public.nebula_nebula_id_seq OWNED BY public.nebula.nebula_id;
+
+
+--
 -- Name: planet; Type: TABLE; Schema: public; Owner: freecodecamp
 --
 
@@ -210,6 +247,13 @@ ALTER TABLE ONLY public.moon ALTER COLUMN moon_id SET DEFAULT nextval('public.mo
 
 
 --
+-- Name: nebula nebula_id; Type: DEFAULT; Schema: public; Owner: freecodecamp
+--
+
+ALTER TABLE ONLY public.nebula ALTER COLUMN nebula_id SET DEFAULT nextval('public.nebula_nebula_id_seq'::regclass);
+
+
+--
 -- Name: planet planet_id; Type: DEFAULT; Schema: public; Owner: freecodecamp
 --
 
@@ -227,45 +271,70 @@ ALTER TABLE ONLY public.star ALTER COLUMN star_id SET DEFAULT nextval('public.st
 -- Data for Name: galaxy; Type: TABLE DATA; Schema: public; Owner: freecodecamp
 --
 
-INSERT INTO public.galaxy VALUES (1, 'Andromeda', 2537000, 4500);
-INSERT INTO public.galaxy VALUES (2, 'Whirlpool', 3100000, 1200);
-INSERT INTO public.galaxy VALUES (3, 'Pinwheel', 10000000, 400);
-INSERT INTO public.galaxy VALUES (4, 'Sombrero', 29000000, 800);
-INSERT INTO public.galaxy VALUES (5, 'Cigar', 12000000, 150);
-INSERT INTO public.galaxy VALUES (6, 'Black Eye', 24000000, 300);
-INSERT INTO public.galaxy VALUES (7, 'Milky Way', 0, 13000);
+COPY public.galaxy (galaxy_id, name, distance_from_earth, age) FROM stdin;
+1	Andromeda	2537000	4500
+2	Whirlpool	3100000	1200
+3	Pinwheel	10000000	400
+4	Sombrero	29000000	800
+5	Cigar	12000000	150
+6	Black Eye	24000000	300
+7	Milky Way	0	13000
+\.
 
 
 --
 -- Data for Name: moon; Type: TABLE DATA; Schema: public; Owner: freecodecamp
 --
 
-INSERT INTO public.moon VALUES (1, 'Moon', 0, 4800, 'Earths only moon', 3);
+COPY public.moon (moon_id, name, distance_from_earth, age_in_millions_of_years, description, planet_id) FROM stdin;
+1	Moon	0	4800	Earths only moon	3
+\.
+
+
+--
+-- Data for Name: nebula; Type: TABLE DATA; Schema: public; Owner: freecodecamp
+--
+
+COPY public.nebula (nebula_id, name, type, size, description) FROM stdin;
+1	Orion Nebula	Emission	24.0	star-forming region in the orion constellation
+2	Crab Nebula	Supernova Remnant	11.0	located in tarus in the year 1054
+3	Helix Nebula	Planetary	2.5	aka the eye of god. located in aquarius
+\.
 
 
 --
 -- Data for Name: planet; Type: TABLE DATA; Schema: public; Owner: freecodecamp
 --
 
-INSERT INTO public.planet VALUES (3, 'Earth', 1, 2500, true, true, 0, 'you are on earth');
-INSERT INTO public.planet VALUES (1, 'Mercury', 1, 4500, false, true, 92, 'closest to sun');
-INSERT INTO public.planet VALUES (2, 'Venus', 1, 4000, false, true, 41, 'second closest to sun');
-INSERT INTO public.planet VALUES (4, 'Proxima Centauri b', 2, 1000, false, true, 4, 'orbits the closest star to the sun');
-INSERT INTO public.planet VALUES (5, 'Jupiter', 1, 2500, false, false, 630, 'largest in our solar system');
-INSERT INTO public.planet VALUES (6, 'Saturn', 1, 455, false, false, 1284, 'has rings');
-INSERT INTO public.planet VALUES (7, 'Uranus', 1, 2000, false, true, 2716, 'the name sounds like your anus');
+COPY public.planet (planet_id, name, star_id, age_in_millions_of_years, has_life, is_sphere, distance_from_earth, description) FROM stdin;
+3	Earth	1	2500	t	t	0	you are on earth
+1	Mercury	1	4500	f	t	92	closest to sun
+2	Venus	1	4000	f	t	41	second closest to sun
+4	Proxima Centauri b	2	1000	f	t	4	orbits the closest star to the sun
+5	Jupiter	1	2500	f	f	630	largest in our solar system
+6	Saturn	1	455	f	f	1284	has rings
+7	Uranus	1	2000	f	t	2716	the name sounds like your anus
+8	Mars	1	4500	f	t	78	the red planet
+9	Neptune	1	4000	f	t	2703	the farthest planet from our sun
+10	Kepler-186f	7	1100	f	t	501	potentially habitable
+11	Alpha Centauri b	2	1000	\N	\N	5	orbiting one of the AC stars
+12	Sirius b	4	150	\N	\N	9	dwarf companion
+\.
 
 
 --
 -- Data for Name: star; Type: TABLE DATA; Schema: public; Owner: freecodecamp
 --
 
-INSERT INTO public.star VALUES (1, 'Sol', 0, 4600, 'Our Sun', 7);
-INSERT INTO public.star VALUES (2, 'Alpha Centauri', 4, 2500, 'Alpha Centauri is a triple star system.', 1);
-INSERT INTO public.star VALUES (3, 'Betelgeuse', 640, 8000, 'red supergiant', 4);
-INSERT INTO public.star VALUES (4, 'Sirius', 9, 2500, 'Sirius is a bright star', 5);
-INSERT INTO public.star VALUES (5, 'Vega', 25, 455, '5th brightest', 3);
-INSERT INTO public.star VALUES (6, 'Polaris', 430, 2000, 'the north star', 7);
+COPY public.star (star_id, name, distance_from_earth, age_in_millions_of_years, description, galaxy_id) FROM stdin;
+1	Sol	0	4600	Our Sun	7
+2	Alpha Centauri	4	2500	Alpha Centauri is a triple star system.	1
+3	Betelgeuse	640	8000	red supergiant	4
+4	Sirius	9	2500	Sirius is a bright star	5
+5	Vega	25	455	5th brightest	3
+6	Polaris	430	2000	the north star	7
+7	Kepler-186	500	4000	\N	\N
+\.
 
 
 --
@@ -283,17 +352,24 @@ SELECT pg_catalog.setval('public.moon_moon_id_seq', 1, true);
 
 
 --
+-- Name: nebula_nebula_id_seq; Type: SEQUENCE SET; Schema: public; Owner: freecodecamp
+--
+
+SELECT pg_catalog.setval('public.nebula_nebula_id_seq', 3, true);
+
+
+--
 -- Name: planet_planet_id_seq; Type: SEQUENCE SET; Schema: public; Owner: freecodecamp
 --
 
-SELECT pg_catalog.setval('public.planet_planet_id_seq', 7, true);
+SELECT pg_catalog.setval('public.planet_planet_id_seq', 12, true);
 
 
 --
 -- Name: star_star_id_seq; Type: SEQUENCE SET; Schema: public; Owner: freecodecamp
 --
 
-SELECT pg_catalog.setval('public.star_star_id_seq', 6, true);
+SELECT pg_catalog.setval('public.star_star_id_seq', 7, true);
 
 
 --
@@ -318,6 +394,22 @@ ALTER TABLE ONLY public.moon
 
 ALTER TABLE ONLY public.moon
     ADD CONSTRAINT moon_pkey PRIMARY KEY (moon_id);
+
+
+--
+-- Name: nebula nebula_name_key; Type: CONSTRAINT; Schema: public; Owner: freecodecamp
+--
+
+ALTER TABLE ONLY public.nebula
+    ADD CONSTRAINT nebula_name_key UNIQUE (name);
+
+
+--
+-- Name: nebula nebula_pkey; Type: CONSTRAINT; Schema: public; Owner: freecodecamp
+--
+
+ALTER TABLE ONLY public.nebula
+    ADD CONSTRAINT nebula_pkey PRIMARY KEY (nebula_id);
 
 
 --
