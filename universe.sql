@@ -49,9 +49,10 @@ SET default_table_access_method = heap;
 
 CREATE TABLE public.galaxy (
     galaxy_id integer NOT NULL,
-    name character varying(32),
+    name character varying(32) NOT NULL,
     distance_from_earth integer,
-    age integer
+    age integer,
+    description text
 );
 
 
@@ -86,7 +87,7 @@ ALTER SEQUENCE public.galaxy_id_seq OWNED BY public.galaxy.galaxy_id;
 CREATE TABLE public.moon (
     moon_id integer NOT NULL,
     name character varying(32) NOT NULL,
-    distance_from_earth integer,
+    distance_from_planet integer,
     age_in_millions_of_years integer,
     description text NOT NULL,
     planet_id integer
@@ -200,7 +201,7 @@ ALTER SEQUENCE public.planet_planet_id_seq OWNED BY public.planet.planet_id;
 
 CREATE TABLE public.star (
     star_id integer NOT NULL,
-    name character varying(32),
+    name character varying(32) NOT NULL,
     distance_from_earth integer,
     age_in_millions_of_years integer,
     description text,
@@ -271,14 +272,14 @@ ALTER TABLE ONLY public.star ALTER COLUMN star_id SET DEFAULT nextval('public.st
 -- Data for Name: galaxy; Type: TABLE DATA; Schema: public; Owner: freecodecamp
 --
 
-COPY public.galaxy (galaxy_id, name, distance_from_earth, age) FROM stdin;
-1	Andromeda	2537000	4500
-2	Whirlpool	3100000	1200
-3	Pinwheel	10000000	400
-4	Sombrero	29000000	800
-5	Cigar	12000000	150
-6	Black Eye	24000000	300
-7	Milky Way	0	13000
+COPY public.galaxy (galaxy_id, name, distance_from_earth, age, description) FROM stdin;
+1	Andromeda	2537000	4500	\N
+2	Whirlpool	3100000	1200	\N
+3	Pinwheel	10000000	400	\N
+4	Sombrero	29000000	800	\N
+5	Cigar	12000000	150	\N
+6	Black Eye	24000000	300	\N
+7	Milky Way	0	13000	\N
 \.
 
 
@@ -286,8 +287,28 @@ COPY public.galaxy (galaxy_id, name, distance_from_earth, age) FROM stdin;
 -- Data for Name: moon; Type: TABLE DATA; Schema: public; Owner: freecodecamp
 --
 
-COPY public.moon (moon_id, name, distance_from_earth, age_in_millions_of_years, description, planet_id) FROM stdin;
+COPY public.moon (moon_id, name, distance_from_planet, age_in_millions_of_years, description, planet_id) FROM stdin;
 1	Moon	0	4800	Earths only moon	3
+2	Phobos	9	4500	one of mars 2 moons	8
+3	Deimos	24	4500	mars small moon	8
+4	Europa	671	2500	one of jupiters galilean moons	5
+5	Ganymede	1070	2500	jupiters largest	5
+6	Callisto	1883	2500	galilean	5
+7	Io	421	2500	volcanic	5
+8	Titan	1221	455	saturns largest	6
+9	Enceladus	238	455	active geysures	6
+10	Triton	354759	4000	neptunes largest	9
+11	Miranda	129390	455	uranus	6
+12	Umbriel	2663000	2000	one of the majors of uranus	7
+13	Ariel	191240	2000	one of the majors of uranus	7
+14	Oberon	583520	2000	one of the majors of uranus	7
+15	Titania	435840	2000	one of the majors of uranus	7
+16	Iapetus	3560821	455	two toned surface	6
+17	Rhea	527040	455	second largest of saturn	6
+18	Dione	377400	455	ice cliffs	6
+19	Tethys	294660	455	large crater	6
+21	Amalthea	181400	2500	largest inner moon of jupiter	5
+22	Himalia	1146100	2500	irregular shape and long orbit	5
 \.
 
 
@@ -348,7 +369,7 @@ SELECT pg_catalog.setval('public.galaxy_id_seq', 7, true);
 -- Name: moon_moon_id_seq; Type: SEQUENCE SET; Schema: public; Owner: freecodecamp
 --
 
-SELECT pg_catalog.setval('public.moon_moon_id_seq', 1, true);
+SELECT pg_catalog.setval('public.moon_moon_id_seq', 22, true);
 
 
 --
@@ -434,6 +455,54 @@ ALTER TABLE ONLY public.planet
 
 ALTER TABLE ONLY public.star
     ADD CONSTRAINT star_pkey PRIMARY KEY (star_id);
+
+
+--
+-- Name: galaxy unique_galaxy_id; Type: CONSTRAINT; Schema: public; Owner: freecodecamp
+--
+
+ALTER TABLE ONLY public.galaxy
+    ADD CONSTRAINT unique_galaxy_id UNIQUE (galaxy_id);
+
+
+--
+-- Name: moon unique_id; Type: CONSTRAINT; Schema: public; Owner: freecodecamp
+--
+
+ALTER TABLE ONLY public.moon
+    ADD CONSTRAINT unique_id UNIQUE (moon_id);
+
+
+--
+-- Name: galaxy unique_name; Type: CONSTRAINT; Schema: public; Owner: freecodecamp
+--
+
+ALTER TABLE ONLY public.galaxy
+    ADD CONSTRAINT unique_name UNIQUE (name);
+
+
+--
+-- Name: nebula unique_nebula_id; Type: CONSTRAINT; Schema: public; Owner: freecodecamp
+--
+
+ALTER TABLE ONLY public.nebula
+    ADD CONSTRAINT unique_nebula_id UNIQUE (nebula_id);
+
+
+--
+-- Name: planet unique_planet_id; Type: CONSTRAINT; Schema: public; Owner: freecodecamp
+--
+
+ALTER TABLE ONLY public.planet
+    ADD CONSTRAINT unique_planet_id UNIQUE (planet_id);
+
+
+--
+-- Name: star unique_star_id; Type: CONSTRAINT; Schema: public; Owner: freecodecamp
+--
+
+ALTER TABLE ONLY public.star
+    ADD CONSTRAINT unique_star_id UNIQUE (star_id);
 
 
 --
